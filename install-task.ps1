@@ -1,10 +1,10 @@
 ﻿# 注册计划任务：登录时 + 网络接通时 + 每10分钟，自动执行 login.ps1
 $ErrorActionPreference = 'Stop'
 $dir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ps1 = Join-Path $dir 'login.ps1'
 $taskName = 'NJUCM-CampusAutoLogin'
 
-$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$ps1`""
+# 通过 VBS 包装静默运行，避免每次触发时弹出控制台窗口
+$action = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument "`"$dir\run-hidden.vbs`""
 
 # 触发器1：用户登录（延迟15秒等网络起来）
 $tLogon = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERDOMAIN\$env:USERNAME"
