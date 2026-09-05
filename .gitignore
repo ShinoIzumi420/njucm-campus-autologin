@@ -1,0 +1,7 @@
+# 本机生成的私密/运行时文件，切勿提交
+cred.bin
+config.json
+login.log
+lastfail.txt
+PAUSE.txt
+probe/
