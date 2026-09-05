@@ -2,6 +2,8 @@
 
 自动登录南京中医药大学校园网认证系统（`net.njucm.edu.cn`「网络接入认证系统」）。装好后，连上校园网会自动完成 Web 认证，开机、联网、断线重连都不需要再打开浏览器。
 
+环境要求：Windows 10 / 11，使用系统自带的 Windows PowerShell，无需安装任何依赖，无需管理员权限。
+
 > 采用相同认证系统（`/api/portal/v1/login` 接口风格）的其他学校也可以使用，修改 `login.ps1` 顶部的 `$Portal` 地址即可。
 
 ## 原理
@@ -14,7 +16,7 @@
 | `POST /api/portal/v1/login` | 提交 `{domain, username, password}`（PAP），被拒自动回退 CHAP（challenge + MD5） |
 | `GET /api/portal/v1/challenge` | CHAP 模式取随机质询串 |
 
-网关按源 IP 识别设备，因此脚本必须运行在需要认证的那台电脑上。密码通过 Windows DPAPI 加密保存（`cred.bin`），仅当前 Windows 用户可解密。
+网关按源 IP 识别设备，因此脚本必须运行在需要认证的那台电脑上。密码经 Windows DPAPI 加密保存，仅当前 Windows 用户可解密。
 
 ## 安装
 
@@ -36,17 +38,7 @@
 | `卸载.cmd` | 删除计划任务 |
 | `login.ps1` | 核心登录脚本 |
 | `setup.ps1` / `install-task.ps1` / `uninstall-task.ps1` | 被 cmd 调用的实际逻辑 |
-| `config.example.json` | 配置模板（复制为 `config.json` 可跳过交互输入账号域） |
-
-运行后本机生成的文件（均已被 `.gitignore` 排除，请勿提交）：
-
-| 文件 | 说明 |
-|---|---|
-| `config.json` | 账号与运营商域（default=校园网 / cmcc=移动 / telecom=电信 / unicom=联通） |
-| `cred.bin` | DPAPI 加密的密码 |
-| `login.log` | 登录日志 |
-| `lastfail.txt` | 认证失败冷却标记（1 小时内不重试，防止锁号） |
-| `PAUSE.txt` | 手动新建即暂停自动登录，删除即恢复 |
+| `config.example.json` | 配置模板（复制为 `config.json` 可预填账号与运营商域） |
 
 ## 常见问题
 
